@@ -1,0 +1,117 @@
+[General]
+name = AquaX Piscinas
+author = AquaX
+version = 1.0.0
+license = Commercial
+tags = piscinas, e-commerce, loja, aquax
+
+[Theme Colors]
+primary_color = #0891B2
+secondary_color = #0E7490
+accent_color = #06B6D4
+dark_color = #164E63
+light_color = #ECFEFF
+success_color = #10B981
+
+[Typography]
+heading_font = Poppins
+body_font = Inter
+
+[Features]
+quick_view = enabled
+ajax_cart = enabled
+product_zoom = enabled
+lazy_loading = enabled
+
+[Social]
+facebook =
+instagram =
+youtube =
+whatsapp =
+
+[Contact]
+phone =
+email =
+address =
+
+[Settings]
+
+logo =
+    name = Logo da loja
+    type = image
+    value =
+
+favicon =
+    name = Favicon
+    type = image
+    value =
+
+show_newsletter =
+    name = Exibir newsletter
+    type = boolean
+    value = true
+
+show_whatsapp =
+    name = Exibir botão WhatsApp
+    type = boolean
+    value = true
+
+whatsapp_number =
+    name = Número WhatsApp
+    type = text
+    value =
+
+banner_home_1 =
+    name = Banner principal 1
+    type = image
+    value =
+
+banner_home_2 =
+    name = Banner principal 2
+    type = image
+    value =
+
+banner_home_3 =
+    name = Banner principal 3
+    type = image
+    value =
+
+featured_categories_title =
+    name = Título categorias destacadas
+    type = text
+    value = Categorias
+
+featured_products_title =
+    name = Título produtos destacados
+    type = text
+    value = Produtos em Destaque
+
+benefit_1_title =
+    name = Benefício 1 - Título
+    type = text
+    value = Entrega Rápida
+
+benefit_1_description =
+    name = Benefício 1 - Descrição
+    type = text
+    value = Entrega expressa para todo Brasil
+
+benefit_2_title =
+    name = Benefício 2 - Título
+    type = text
+    value = Pagamento Seguro
+
+benefit_2_description =
+    name = Benefício 2 - Descrição
+    type = text
+    value = Ambiente 100% seguro e criptografado
+
+benefit_3_title =
+    name = Benefício 3 - Título
+    type = text
+    value = Suporte Especializado
+
+benefit_3_description =
+    name = Benefício 3 - Descrição
+    type = text
+    value = Equipe técnica para ajudar você

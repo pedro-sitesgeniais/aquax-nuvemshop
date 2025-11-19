@@ -1,139 +1,182 @@
 <!DOCTYPE html>
-<html lang="{{ lang }}" itemscope itemtype="http://schema.org/WebSite">
-<head>
-    {# Meta tags básicas #}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:og="http://opengraphprotocol.org/schema/" lang="{% for language in languages %}{% if language.active %}{{ language.lang }}{% endif %}{% endfor %}">
+    <head>
+        <link rel="preconnect" href="{{ store_resource_hints }}" />
+        <link rel="dns-prefetch" href="{{ store_resource_hints }}" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{{ page_title }}</title>
+        <meta name="description" content="{{ page_description }}" />
+        <link rel="preload" as="style" href="{{ [settings.font_headings, settings.font_rest] | google_fonts_url('300, 400, 700') }}" />
+        <link rel="preload" href="{{ 'css/style-colors.scss.tpl' | static_url }}" as="style" />
 
-    {# SEO Meta tags #}
-    <title>{{ page_title }}</title>
-    <meta name="description" content="{{ page_description }}">
-    <meta name="keywords" content="{{ store.name }}, piscinas, produtos químicos, equipamentos">
+        {# Preload LCP home, category and product page elements #}
 
-    {# Open Graph / Social #}
-    <meta property="og:title" content="{{ page_title }}">
-    <meta property="og:description" content="{{ page_description }}">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ store.url }}">
-    <meta property="og:site_name" content="{{ store.name }}">
-    {% if store.logo %}
-    <meta property="og:image" content="{{ store.logo }}">
-    {% endif %}
+        {% snipplet 'preload-images.tpl' %}
 
-    {# Twitter Card #}
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ page_title }}">
-    <meta name="twitter:description" content="{{ page_description }}">
+        {{ component('social-meta') }}
 
-    {# Favicon #}
-    {% if settings.favicon %}
-    <link rel="icon" type="image/png" href="{{ settings.favicon }}">
-    {% endif %}
-    <link rel="apple-touch-icon" href="{{ settings.favicon | default(store.logo) }}">
+        {#/*============================================================================
+            #CSS and fonts
+        ==============================================================================*/#}
 
-    {# Preconnect para performance #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        {# Critical CSS needed to show first elements of store while CSS async is loading #}
 
-    {# Fontes Google - Poppins e Inter #}
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+        <style>
 
-    {# CSS Principal #}
-    <link rel="stylesheet" href="{{ 'css/style-critical.scss' | static_url }}">
+            {# Font families #}
 
-    {# CSS Componentes #}
-    <link rel="stylesheet" href="{{ 'css/components/quick-view.scss' | static_url }}">
-    <link rel="stylesheet" href="{{ 'css/components/notifications.scss' | static_url }}">
+            {{ component(
+                'fonts',{
+                    font_weights: '300, 400, 700',
+                    font_settings: 'settings.font_headings, settings.font_rest'
+                })
+            }}
 
-    {# Canonical URL #}
-    <link rel="canonical" href="{{ canonical_url }}">
+            {% include "static/css/style-critical.tpl" %}
+        </style>
 
-    {# Preload de recursos críticos #}
-    {% if product %}
-    <link rel="preload" as="image" href="{{ product.featured_image }}">
-    {% endif %}
+        {# Colors and fonts used from settings.txt and defined on theme customization #}
 
-    {# DNS Prefetch para recursos externos #}
-    <link rel="dns-prefetch" href="//www.google-analytics.com">
-    <link rel="dns-prefetch" href="//www.googletagmanager.com">
+        {{ 'css/style-colors.scss.tpl' | static_url | static_inline }}
 
-    {# Nuvemshop head scripts #}
-    {{ head_content }}
+        {# Load async styling not mandatory for first meaningfull paint #}
 
-    {# Schema.org estruturado #}
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "{{ store.name }}",
-        "url": "{{ store.url }}",
-        {% if store.logo %}
-        "logo": "{{ store.logo }}",
+        <link rel="stylesheet" href="{{ 'css/style-async.scss.tpl' | static_url }}" media="print" onload="this.media='all'">
+
+        {# Loads custom CSS added from Advanced Settings on the admin´s theme customization screen #}
+
+        <style>
+            {{ settings.css_code | raw }}
+        </style>
+
+        {#/*============================================================================
+            #Javascript: Needed before HTML loads
+        ==============================================================================*/#}
+
+        {# Defines if async JS will be used by using script_tag(true) #}
+
+        {% set async_js = true %}
+
+        {# Defines the usage of jquery loaded below, if nojquery = true is deleted it will fallback to jquery 1.5 #}
+
+        {% set nojquery = true %}
+
+        {# Jquery async by adding script_tag(true) #}
+
+        {% if load_jquery %}
+
+            {{ '//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js' | script_tag(true) }}
+
         {% endif %}
-        "contactPoint": {
-            "@type": "ContactPoint",
-            "contactType": "customer service"
-        }
-    }
-    </script>
-</head>
-<body class="{% block body_class %}{% endblock %}" data-store="{{ store.id }}">
 
-    {# Skip navigation para acessibilidade #}
-    <a href="#main-content" class="skip-link visually-hidden">Pular para o conteúdo principal</a>
+        {# Loads private Tiendanube JS #}
 
-    {# Header #}
-    {% include 'snipplets/header.tpl' %}
+        {% head_content %}
 
-    {# Conteúdo principal #}
-    <main id="main-content" role="main">
+        {# Structured data to provide information for Google about the page content #}
+
+        {{ component('structured-data') }}
+
+    </head>
+    <body class="{% if customer %}customer-logged-in{% endif %} template-{{ template | replace('.', '-') }}">
+        {# Facebook comments on product page #}
+
+        {% if template == 'product' %}
+
+            {# Facebook comment box JS #}
+            {% if settings.show_product_fb_comment_box %}
+                {{ fb_js }}
+            {% endif %}
+
+            {# Pinterest share button JS #}
+            {{ pin_js }}
+
+        {% endif %}
+
+        {# Back to admin bar #}
+
+        {{back_to_admin}}
+
+        {# Header = Advertising + Nav + Logo + Search + Ajax Cart #}
+
+        {% snipplet "header/header.tpl" %}
+
+        {# Page content #}
+
         {% template_content %}
-    </main>
 
-    {# Footer #}
-    {% include 'snipplets/footer.tpl' %}
+        {# Modals overlay #}
 
-    {# Botão WhatsApp flutuante #}
-    {% if settings.show_whatsapp and settings.whatsapp_number %}
-    <a href="https://wa.me/{{ settings.whatsapp_number }}"
-       class="whatsapp-float"
-       target="_blank"
-       rel="noopener noreferrer"
-       aria-label="Fale conosco pelo WhatsApp">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-        </svg>
-    </a>
-    {% endif %}
+        <div class="js-modal-overlay modal-overlay" style="display: none;"></div>
 
-    {# JavaScript Principal #}
-    <script src="{{ 'js/main.js' | static_url }}" defer></script>
+        {# Quickshop modal #}
 
-    {# JavaScript Componentes #}
-    <script src="{{ 'js/components/carousel.js' | static_url }}" defer></script>
-    <script src="{{ 'js/components/add-to-cart.js' | static_url }}" defer></script>
+        {% snipplet "grid/quick-shop.tpl" %}
 
-    {# Quick View apenas em páginas com produtos #}
-    {% if template == 'home' or template == 'category' or template == 'search' %}
-    <script src="{{ 'js/components/quick-view.js' | static_url }}" defer></script>
-    {% endif %}
+        {# WhatsApp chat button #}
 
-    {# Filtros apenas na categoria #}
-    {% if template == 'category' %}
-    <script src="{{ 'js/components/filters.js' | static_url }}" defer></script>
-    {% endif %}
+        {% snipplet "whatsapp-chat.tpl" %}
 
-    {# Schema.org da Organização #}
-    {% include 'snipplets/schema-organization.tpl' %}
+        {# Footer #}
 
-    {# Schema.org do Produto (se na página de produto) #}
-    {% if template == 'product' and product %}
-    {% include 'snipplets/schema-product.tpl' %}
-    {% endif %}
+        {% snipplet "footer.tpl" %}
 
-    {# Nuvemshop footer scripts #}
-    {{ end_content }}
+        {% if cart.free_shipping.cart_has_free_shipping or cart.free_shipping.min_price_free_shipping.min_price %}
 
-</body>
+            {# Minimum used for free shipping progress messages. Located on header so it can be accesed everywhere with shipping calculator active or inactive #}
+
+            <span class="js-ship-free-min hidden" data-pricemin="{{ cart.free_shipping.min_price_free_shipping.min_price_raw }}"></span>
+            <span class="js-free-shipping-config hidden" data-config="{{ cart.free_shipping.allFreeConfigurations }}"></span>
+            <span class="js-cart-subtotal hidden" data-priceraw="{{ cart.subtotal }}"></span>
+            <span class="js-cart-discount hidden" data-priceraw="{{ cart.promotional_discount_amount }}"></span>
+        {% endif %}
+
+        {#/*============================================================================
+            #Javascript: Needed after HTML loads
+        ==============================================================================*/#}
+
+        {# Javascript used in the store #}
+
+        <script type="text/javascript">
+
+            {# Libraries that do NOT depend on other libraries, e.g: Jquery #}
+
+            {% include "static/js/external-no-dependencies.js.tpl" %}
+
+            {# LS.ready.then function waits to Jquery and private Tiendanube JS to be loaded before executing what´s inside #}
+
+            LS.ready.then(function(){
+
+                {# Libraries that requires Jquery to work #}
+
+                {% include "static/js/external.js.tpl" %}
+
+                {# Specific store JS functions: product variants, cart, shipping, etc #}
+
+                {% include "static/js/store.js.tpl" %}
+            });
+        </script>
+
+        {# Google reCAPTCHA on register page #}
+
+        {% if template == 'account.register' %}
+            {% if not store.hasContactFormsRecaptcha() %}
+                {{ '//www.google.com/recaptcha/api.js' | script_tag(true) }}
+            {% endif %}
+            <script type="text/javascript">
+                var recaptchaCallback = function() {
+                    jQueryNuvem('.js-recaptcha-button').prop('disabled', false);
+                };
+            </script>
+        {% endif %}
+
+        {# Store external codes added from admin #}
+
+        {{ component('assorted-js', {}) }}
+
+    </body>
 </html>

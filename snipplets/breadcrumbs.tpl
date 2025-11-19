@@ -1,32 +1,39 @@
-{# ========================================
-   Breadcrumbs - AquaX Piscinas
-   Navegação estrutural reutilizável
-   ======================================== #}
+{# /*============================================================================
+  #Page breadcrumbs
+==============================================================================*/
+#Properties
 
-<nav class="breadcrumbs" aria-label="Navegação estrutural">
-    <div class="container">
-        <ul itemscope itemtype="http://schema.org/BreadcrumbList">
-            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                <a href="{{ store.url }}" itemprop="item">
-                    <span itemprop="name">Início</span>
-                </a>
-                <meta itemprop="position" content="1">
-            </li>
+#Breadcrumb
+    //breadcrumbs_custom_class for custom CSS classes
+#}
 
-            {% if breadcrumb_items %}
-                {% for item in breadcrumb_items %}
-                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                    {% if item.url %}
-                    <a href="{{ item.url }}" itemprop="item">
-                        <span itemprop="name">{{ item.name }}</span>
-                    </a>
-                    {% else %}
-                    <span itemprop="name">{{ item.name }}</span>
-                    {% endif %}
-                    <meta itemprop="position" content="{{ loop.index + 1 }}">
-                </li>
-                {% endfor %}
-            {% endif %}
-        </ul>
+{% if breadcrumbs %}
+    <div class="breadcrumbs {{ breadcrumbs_custom_class }}">
+        <a class="crumb" href="{{ store.url }}" title="{{ store.name }}">{{ "Inicio" | translate }}</a>
+        <span class="divider">></span>
+        {% if template == 'page' %}
+            <span class="crumb active">{{ page.name }}</span>
+        {% elseif template == 'cart' %}
+            <span class="crumb active">{{ "Carrito de compras" | translate }}</span>
+        {% elseif template == 'search' %}
+            <span class="crumb active">{{ "Resultados de búsqueda" | translate }}</span>
+        {% elseif template == 'account.order' %}
+             <span class="crumb active">{{ 'Orden {1}' | translate(order.number) }}</span>
+        {% elseif template == 'blog' %}
+             <span class="crumb active">{{ 'Blog' | translate }}</span>
+        {% elseif template == 'blog-post' %}
+             <a href="{{ store.blog_url }}" class="crumb">{{ 'Blog' | translate }}</a>
+             <span class="divider">></span>
+             <span class="crumb active">{{ post.title }}</span>
+        {% else %}
+            {% for crumb in breadcrumbs %}
+                {% if crumb.last %}
+                    <span class="crumb active">{{ crumb.name }}</span>
+                {% else %}
+                    <a class="crumb" href="{{ crumb.url }}" title="{{ crumb.name }}">{{ crumb.name }}</a>
+    	            <span class="divider">></span>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
     </div>
-</nav>
+{% endif %}

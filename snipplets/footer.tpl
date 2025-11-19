@@ -1,157 +1,133 @@
-{# ========================================
-   Footer - AquaX Piscinas
-   Rodapé com links, contato e redes sociais
-   ======================================== #}
+{% set has_social_network = store.facebook or store.twitter or store.pinterest or store.instagram or store.tiktok or store.youtube %}
+{% set has_footer_contact_info = store.phone or store.email or store.blog or store.address %}          
 
-<footer class="footer" role="contentinfo">
-    {# Footer principal #}
-    <div class="footer-main">
-        <div class="container">
-            <div class="footer-grid">
-                {# Coluna 1 - Sobre #}
-                <div class="footer-col">
-                    <div class="footer-logo">
-                        {% if store.logo %}
-                        <img src="{{ store.logo }}" alt="{{ store.name }}" width="150" height="40" loading="lazy">
-                        {% else %}
-                        <span class="logo-text">{{ store.name }}</span>
-                        {% endif %}
-                    </div>
-                    <p class="footer-about">
-                        Especialistas em produtos e equipamentos para piscinas.
-                        Qualidade e confiança para manter sua piscina sempre limpa e saudável.
-                    </p>
+{% set has_footer_menu = settings.footer_menu %}
+{% set has_payment_logos = settings.payments %}
+{% set has_shipping_logos = settings.shipping %}
+{% set has_shipping_payment_logos = has_payment_logos or has_shipping_logos %}
+<footer class="js-footer js-hide-footer-while-scrolling display-when-content-ready" data-store="footer">
+	<div class="container">
 
-                    {# Redes sociais #}
-                    <div class="social-links">
-                        {% if settings.facebook %}
-                        <a href="{{ settings.facebook }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-                            </svg>
-                        </a>
-                        {% endif %}
-                        {% if settings.instagram %}
-                        <a href="{{ settings.instagram }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-                            </svg>
-                        </a>
-                        {% endif %}
-                        {% if settings.youtube %}
-                        <a href="{{ settings.youtube }}" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
-                                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
-                            </svg>
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
+		{% if template != 'password' %}
 
-                {# Coluna 2 - Links Institucionais #}
-                <div class="footer-col">
-                    <h3 class="footer-title">Institucional</h3>
-                    <ul class="footer-links">
-                        <li><a href="{{ store.url }}">Início</a></li>
-                        {% for page in pages %}
-                        <li><a href="{{ page.url }}">{{ page.name }}</a></li>
-                        {% endfor %}
-                        <li><a href="{{ store.contact_url }}">Contato</a></li>
-                    </ul>
-                </div>
+			{# Newsletter #}
+			{% if settings.news_show %}
+			    {% include "snipplets/newsletter.tpl" %}
+			{% endif %}
 
-                {# Coluna 3 - Categorias #}
-                <div class="footer-col">
-                    <h3 class="footer-title">Categorias</h3>
-                    <ul class="footer-links">
-                        {% for category in categories | slice(0, 6) %}
-                        <li><a href="{{ category.url }}">{{ category.name }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
+		{% endif %}
+        
 
-                {# Coluna 4 - Contato #}
-                <div class="footer-col">
-                    <h3 class="footer-title">Contato</h3>
-                    <ul class="footer-contact">
-                        {% if store.address %}
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                                <circle cx="12" cy="10" r="3"/>
-                            </svg>
-                            <span>{{ store.address }}</span>
-                        </li>
-                        {% endif %}
-                        {% if store.phone %}
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                            </svg>
-                            <a href="tel:{{ store.phone }}">{{ store.phone }}</a>
-                        </li>
-                        {% endif %}
-                        {% if store.email %}
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                                <polyline points="22,6 12,13 2,6"/>
-                            </svg>
-                            <a href="mailto:{{ store.email }}">{{ store.email }}</a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
+        {# Social #}
+ 		{% if has_social_network %}
+ 			<div class="row element-footer">
+ 				<div class="col text-center">{% include "snipplets/social/social-links.tpl" %}</div>
+			</div>
+		{% endif %}
+
+		{% if template != 'password' %}
+
+			{# Foot Nav #}
+			{% if has_footer_menu %}
+				<div class="row element-footer">
+	 				<div class="col text-center">{% include "snipplets/navigation/navigation-foot.tpl" %}</div>
+				</div>
+			{% endif %}
+
+		{% endif %}
+
+		{# Contact #}
+ 		{% if has_footer_contact_info %}
+ 			<div class="row element-footer">
+ 				<div class="col text-center">{% include "snipplets/contact-links.tpl" %}</div>
+			</div>
+		{% endif %}
+
+		{# Logos Payments and Shipping #}
+ 		{% if has_shipping_payment_logos %}
+ 			<div class="row element-footer footer-payments-shipping-logos">
+ 				{% if has_payment_logos %}
+ 					<div class="col text-center">{% include "snipplets/logos-icons.tpl" with {'payments': true} %}</div>
+				{% endif %}
+ 				<div class="w-100 my-2"></div>
+ 				{% if has_shipping_logos %}
+ 					<div class="col text-center">{% include "snipplets/logos-icons.tpl" with {'shipping': true} %}</div>
+ 				{% endif %}
+			</div>
+		{% endif %}
+
+		<div class="row element-footer">
+			<div class="col-md-3 text-center text-md-left">
+                {#
+                La leyenda que aparece debajo de esta linea de código debe mantenerse
+                con las mismas palabras y con su apropiado link a Tienda Nube;
+                como especifican nuestros términos de uso: http://www.tiendanube.com/terminos-de-uso .
+                Si quieres puedes modificar el estilo y posición de la leyenda para que se adapte a
+                tu sitio. Pero debe mantenerse visible para los visitantes y con el link funcional.
+                Os créditos que aparece debaixo da linha de código deverá ser mantida com as mesmas
+                palavras e com seu link para Nuvem Shop; como especificam nossos Termos de Uso:
+                http://www.nuvemshop.com.br/termos-de-uso. Se você quiser poderá alterar o estilo
+                e a posição dos créditos para que ele se adque ao seu site. Porém você precisa
+                manter visivél e com um link funcionando.
+                #}
+                {{ new_powered_by_link }}
+            </div>
+            <div class="col-md-9 copyright text-center text-md-right pt-4 pt-md-0">
+                {{ "Copyright {1} - {2}. Todos los derechos reservados." | translate( (store.business_name ? store.business_name : store.name) ~ (store.business_id ? ' - ' ~ store.business_id : ''), "now" | date('Y') ) }}
+                {{ component('claim-info', {
+						container_classes: "mt-2",
+						divider_classes: "mx-1 d-none d-md-inline-block",
+						text_classes: {text_consumer_defense: 'd-inline-block mb-1'},
+						link_classes: {
+							link_consumer_defense: "font-weight-bold",
+							link_order_cancellation: "font-weight-bold d-md-inline-block d-block mt-3 mt-md-0 mb-2",
+						},
+					}) 
+				}}
             </div>
         </div>
-    </div>
 
-    {# Newsletter #}
-    {% if settings.show_newsletter %}
-    <div class="footer-newsletter">
-        <div class="container">
-            <div class="newsletter-content">
-                <div class="newsletter-text">
-                    <h3>Receba nossas ofertas</h3>
-                    <p>Cadastre-se e receba promoções exclusivas</p>
+        {# AFIP - EBIT - Custom Seal #}
+		{% if store.afip or ebit or settings.custom_seal_code or ("seal_img.jpg" | has_custom_image) %}
+			{% if store.afip or ebit %}
+				<div class="row element-footer">
+	 				<div class="col text-center">
+	 					{% if store.afip %}
+	                        <div class="footer-logo afip seal-afip">
+	                            {{ store.afip | raw }}
+	                        </div>
+	                    {% endif %}
+	                    {% if ebit %}
+	                        <div class="footer-logo ebit seal-ebit">
+	                            {{ ebit }}
+	                        </div>
+	                    {% endif %}
+	 				</div>
+	 			</div>
+ 			{% endif %}
+ 			{% if "seal_img.jpg" | has_custom_image or settings.custom_seal_code %}
+                <div class="row element-footer">
+ 					<div class="col text-center">
+	                    {% if "seal_img.jpg" | has_custom_image %}
+	                        <div class="footer-logo custom-seal">
+	                            {% if settings.seal_url != '' %}
+                                    <a href="{{ settings.seal_url | setting_url }}" target="_blank">
+                                {% endif %}
+                                    <img src="{{ 'images/empty-placeholder.png' | static_url }}" data-src="{{ "seal_img.jpg" | static_url }}" class="custom-seal-img lazyload" alt="{{ 'Sello de' | translate }} {{ store.name }}"/>
+                                {% if settings.seal_url != '' %}
+                                    </a>
+                                {% endif %}
+	                        </div>
+	                    {% endif %}
+	                    {% if settings.custom_seal_code %}
+	                        <div class="custom-seal custom-seal-code">
+	                            {{ settings.custom_seal_code | raw }}
+	                        </div>
+	                    {% endif %}
+	                </div>
                 </div>
-                <form class="newsletter-form" action="{{ store.newsletter_url }}" method="post">
-                    <label for="newsletter-email" class="visually-hidden">E-mail</label>
-                    <input type="email"
-                           id="newsletter-email"
-                           name="email"
-                           placeholder="Seu melhor e-mail"
-                           required
-                           class="newsletter-input">
-                    <button type="submit" class="newsletter-button">Cadastrar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-    {% endif %}
+            {% endif %}
+		{% endif %}
 
-    {# Footer bottom #}
-    <div class="footer-bottom">
-        <div class="container">
-            <div class="footer-bottom-content">
-                <p class="copyright">
-                    &copy; {{ 'now' | date('Y') }} {{ store.name }}. Todos os direitos reservados.
-                </p>
-                <div class="payment-methods">
-                    <span>Formas de pagamento:</span>
-                    <img src="{{ 'img/payment-methods.png' | static_url }}"
-                         alt="Formas de pagamento"
-                         width="200"
-                         height="24"
-                         loading="lazy">
-                </div>
-                <p class="powered-by">
-                    Powered by <a href="https://www.nuvemshop.com.br" target="_blank" rel="noopener">Nuvemshop</a>
-                </p>
-            </div>
-        </div>
-    </div>
+	</div>
 </footer>

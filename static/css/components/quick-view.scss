@@ -1,0 +1,208 @@
+/* ========================================
+   Quick View Modal - AquaX Piscinas
+   ======================================== */
+
+.quick-view-modal {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-4);
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-base);
+
+    &.active {
+        opacity: 1;
+        visibility: visible;
+
+        .quick-view-content {
+            transform: scale(1) translateY(0);
+        }
+    }
+}
+
+.quick-view-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+}
+
+.quick-view-content {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transform: scale(0.9) translateY(20px);
+    transition: transform var(--transition-base);
+}
+
+.quick-view-close {
+    position: absolute;
+    top: var(--spacing-3);
+    right: var(--spacing-3);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-white);
+    border: none;
+    border-radius: var(--radius-full);
+    color: var(--color-gray-600);
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-fast);
+
+    &:hover {
+        background: var(--color-gray-100);
+        color: var(--color-gray-900);
+    }
+}
+
+.quick-view-body {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.quick-view-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-12);
+    gap: var(--spacing-4);
+    color: var(--color-gray-500);
+}
+
+.quick-view-product {
+    display: grid;
+    gap: var(--spacing-6);
+
+    @media (min-width: 768px) {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.quick-view-gallery {
+    padding: var(--spacing-6);
+    background: var(--color-gray-50);
+}
+
+.quick-view-image {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+}
+
+.quick-view-info {
+    padding: var(--spacing-6);
+    display: flex;
+    flex-direction: column;
+}
+
+.quick-view-title {
+    font-size: var(--text-xl);
+    margin-bottom: var(--spacing-4);
+}
+
+.quick-view-price {
+    margin-bottom: var(--spacing-4);
+
+    .price-compare {
+        display: block;
+        font-size: var(--text-sm);
+        color: var(--color-gray-500);
+        text-decoration: line-through;
+    }
+
+    .price-current {
+        font-size: var(--text-2xl);
+        font-weight: 700;
+        color: var(--color-primary);
+    }
+}
+
+.quick-view-description {
+    font-size: var(--text-sm);
+    color: var(--color-gray-600);
+    margin-bottom: var(--spacing-4);
+    line-height: 1.6;
+}
+
+.quick-view-quantity {
+    margin-bottom: var(--spacing-4);
+
+    label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: var(--spacing-2);
+    }
+}
+
+.quick-view-link {
+    display: block;
+    text-align: center;
+    margin-top: var(--spacing-4);
+    font-size: var(--text-sm);
+    color: var(--color-primary);
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.quick-view-error {
+    text-align: center;
+    padding: var(--spacing-8);
+
+    svg {
+        color: var(--color-gray-300);
+        margin-bottom: var(--spacing-4);
+    }
+
+    p {
+        margin-bottom: var(--spacing-4);
+        color: var(--color-gray-600);
+    }
+}
+
+/* Spinner */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--color-gray-200);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.spinner-small {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: var(--color-white);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

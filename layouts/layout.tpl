@@ -42,8 +42,21 @@
     {# CSS Principal #}
     <link rel="stylesheet" href="{{ 'css/style-critical.scss' | static_url }}">
 
+    {# CSS Componentes #}
+    <link rel="stylesheet" href="{{ 'css/components/quick-view.scss' | static_url }}">
+    <link rel="stylesheet" href="{{ 'css/components/notifications.scss' | static_url }}">
+
     {# Canonical URL #}
     <link rel="canonical" href="{{ canonical_url }}">
+
+    {# Preload de recursos críticos #}
+    {% if product %}
+    <link rel="preload" as="image" href="{{ product.featured_image }}">
+    {% endif %}
+
+    {# DNS Prefetch para recursos externos #}
+    <link rel="dns-prefetch" href="//www.google-analytics.com">
+    <link rel="dns-prefetch" href="//www.googletagmanager.com">
 
     {# Nuvemshop head scripts #}
     {{ head_content }}
@@ -96,6 +109,28 @@
 
     {# JavaScript Principal #}
     <script src="{{ 'js/main.js' | static_url }}" defer></script>
+
+    {# JavaScript Componentes #}
+    <script src="{{ 'js/components/carousel.js' | static_url }}" defer></script>
+    <script src="{{ 'js/components/add-to-cart.js' | static_url }}" defer></script>
+
+    {# Quick View apenas em páginas com produtos #}
+    {% if template == 'home' or template == 'category' or template == 'search' %}
+    <script src="{{ 'js/components/quick-view.js' | static_url }}" defer></script>
+    {% endif %}
+
+    {# Filtros apenas na categoria #}
+    {% if template == 'category' %}
+    <script src="{{ 'js/components/filters.js' | static_url }}" defer></script>
+    {% endif %}
+
+    {# Schema.org da Organização #}
+    {% include 'snipplets/schema-organization.tpl' %}
+
+    {# Schema.org do Produto (se na página de produto) #}
+    {% if template == 'product' and product %}
+    {% include 'snipplets/schema-product.tpl' %}
+    {% endif %}
 
     {# Nuvemshop footer scripts #}
     {{ end_content }}
